@@ -5,6 +5,7 @@ import { ProductsModule } from './products/products.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -14,7 +15,10 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     ProductsModule, 
-    AuthModule
+    AuthModule,
+    MulterModule.register({
+      dest:'./uploads'
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

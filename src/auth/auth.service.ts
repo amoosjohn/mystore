@@ -16,7 +16,7 @@ export class AuthService {
     ) {}
 
 
-    async register(registerDto: RegisterDto): Promise<{token: string}> {    
+    async register(registerDto: RegisterDto): Promise<User> {    
         const {name, email, password} = registerDto;
        
         const hashPassword = await bcrypt.hash(password, 10);
@@ -27,9 +27,8 @@ export class AuthService {
             password: hashPassword
         });
 
-        const token = this.jwtService.sign({ id: user._id});
-
-        return {token};
+        user.password = undefined;
+        return user;
     }
 
     async login(loginDto: LoginDto) : Promise<{token: string}> {    
