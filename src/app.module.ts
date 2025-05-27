@@ -6,6 +6,10 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MulterModule } from '@nestjs/platform-express';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -13,12 +17,17 @@ import { MulterModule } from '@nestjs/platform-express';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
     MongooseModule.forRoot(process.env.DB_URI),
-    ProductsModule, 
+    ProductsModule,
     AuthModule,
     MulterModule.register({
-      dest:'./uploads'
-    })
+      dest: './uploads',
+    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
